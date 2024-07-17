@@ -4,7 +4,8 @@ import {X} from "lucide-react";
 import Image from "next/image";
 
 import { UploadDropzone } from "@/lib/uploadthing";
-import "@uploadthing/react/styles.css"
+import { useEffect } from "react";
+// import "@uploadthing/react/styles.css"
 
 interface FileUploadProps {
     onChange:(url?: string)=> void;
@@ -17,6 +18,16 @@ export const FileUpload=({
     value,
     endpoint
 }: FileUploadProps)=>{
+    useEffect(() => {
+        import("@uploadthing/react/styles.css")
+          .then(() => {
+            console.log("Styles imported successfully.");
+          })
+          .catch((error) => {
+            console.error("Failed to import styles:", error);
+          });
+      }, []);
+
     const fileType= value?.split(".").pop();
     if(value&& fileType!=="pdf"){
         return (

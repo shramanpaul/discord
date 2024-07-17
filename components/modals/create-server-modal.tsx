@@ -25,12 +25,9 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { FileUploadData } from "uploadthing/types";
 import { FileUpload } from "@/components/file-upload";
-import { Router } from "lucide-react";
+import { useModal } from "@/hooks/use-modal-store";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -41,15 +38,11 @@ const formSchema = z.object({
   }),
 });
 
-export const InitialModal = () => {
+export const CreateServerModal = () => {
+  const { isOpen, onClose, type } = useModal();
+  const router = useRouter();
 
-    const [isMounted, setIsMounted] = useState(false);
-    const router = useRouter();
-
-    useEffect(()=>{
-      setIsMounted(true)
-      
-    },[]);
+  const isModalOpen = isOpen && type === "createServer";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -62,27 +55,27 @@ export const InitialModal = () => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try{
+    try {
       await axios.post("/api/servers", values);
-      
       form.reset();
       router.refresh();
-      window.location.reload();
-    }catch(error){
-      console.log(error)
+      onClose(); // Close modal after successful submission
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  if(!isMounted) { 
-    return null;
-  }
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
 
   return (
-    <Dialog open>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Cutomize your server
+            Customize your server
           </DialogTitle>
           <DialogDescription className="text-center text-zinc">
             Give your server a personality with a name and an image. You can
@@ -93,21 +86,21 @@ export const InitialModal = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
               <div className="flex items-center justify-center text-center">
-              <FormField 
-              control={form.control}
-              name="imageUrl"
-              render={({field})=>(
-                <FormItem>
-                  <FormControl>
-                    <FileUpload
-                      endpoint="serverImage"
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FileUpload
+                          endpoint="serverImage"
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
               </div>
               <FormField
                 control={form.control}
@@ -118,12 +111,12 @@ export const InitialModal = () => {
                       Server Name
                     </FormLabel>
                     <FormControl>
-                    <Input
-                       disabled={isLoading}
-                      className="bg-zinc-300/50 border-0 foucs-vissible:ring-0 text-black focus-visible:ring-offset-0"
-                      placeholder="Enter your server name"
-                      {...field}
-                    />
+                      <Input
+                        disabled={isLoading}
+                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                        placeholder="Enter your server name"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage></FormMessage>
                   </FormItem>
@@ -131,11 +124,10 @@ export const InitialModal = () => {
               />
             </div>
             <DialogFooter className="bg-gray-100 px-6 py-4">
-                      <Button variant="primary" disabled={isLoading}>
-                        Create
-                      </Button>
-
-                    </DialogFooter>
+              <Button type="submit" variant="primary" disabled={isLoading}>
+                Create
+              </Button>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>
