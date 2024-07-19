@@ -27,6 +27,7 @@ export const NavigationItem = ({
 
     const onClick=()=>{
         router.push(`/servers/${id}`);
+        console.log(`Clicked ${id}`);
     }
     return (
         <ActionTooltip
@@ -34,7 +35,7 @@ export const NavigationItem = ({
             align="center"
             label={name}
         >
-            <button onClick={() => {onClick}} className="group relative flex items-center">
+            <button onClick={() => {onClick()}} className="group relative flex items-center">
                 <div className={cn(
                     "absolute left-0 bg-primary rounded-r-full transition-all w-[4px]",
                     params?.serverId !== id && "group-hover:h-[20px]",
