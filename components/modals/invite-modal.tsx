@@ -44,7 +44,7 @@ export const InviteModal = () => {
   const onNew=async()=>{
     try {
         setIsLoading(true);
-        const response = await axios.patch(`/api/servers/${server?.id}/invite`);
+        const response = await axios.patch(`/api/servers/${server?.id}/invite-code`);
     }catch (error){
       console.error(error);
     }finally{
