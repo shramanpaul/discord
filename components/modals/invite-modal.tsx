@@ -20,7 +20,7 @@ import { useState } from "react";
 import axios from "axios";
 
 export const InviteModal = () => {
-  const { isOpen, onClose, type,data } = useModal();
+  const { onOpen,isOpen, onClose, type,data } = useModal();
   const origin = useOrigin();
 
 
@@ -41,17 +41,41 @@ export const InviteModal = () => {
     }, 1000);
   }
 
-  const onNew=async()=>{
-    try {
-        setIsLoading(true);
-        const response = await axios.patch(`/api/servers/${server?.id}/invite-code`);
-    }catch (error){
-      console.error(error);
-    }finally{
-      setIsLoading(false);
+ const onNew = async () => {
+    if (!server || !server.id) {
+        console.error("Server ID is undefined");
+        return;
     }
 
+    try {
+      setIsLoading(true);
+      console.log(`Sending PATCH request to /api/servers/${server.id}/invite-code`);
+      const response = await axios.patch(`/api/servers/${server.id}/invite-code`);
+      console.log("Server update response:", response.data);
+      onOpen("invite", { server: response.data });
+  } catch (error) {
+      console.error("Error sending PATCH request:", error);
+      // Handle the error appropriately
+  } finally {
+      setIsLoading(false);
   }
+};
+// const onNew=async()=>{
+//   try {
+//       setIsLoading(true);
+//       console.log("generate link error point 1");
+//       const response = await axios.patch(`/api/servers/${server?.id}/invite-code`);
+//       onOpen("invite", { server: response.data });
+      
+  
+//   }catch (error){
+//     console.log("generate link error");
+//     console.error(error);
+//   }finally{
+//     setIsLoading(false);
+//   }
+
+// }
   
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
@@ -67,8 +91,8 @@ export const InviteModal = () => {
                 Server Invite Link
             </Label>
             <div className="flex items-center mt-2 gap-x-2">
-                <Input className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black foxus-visible:ring-offset-0" value={inviteUrl} />
-            <Button onClick={onCopy} size="icon">
+                <Input disabled={isLoading} className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black foxus-visible:ring-offset-0" value={inviteUrl} readOnly />
+            <Button disabled={isLoading} onClick={onCopy} size="icon">
                 {copied ? <Check className="w-4 h-4"/>:<Copy className="w-4 h-4"/>}
                 
             </Button>
@@ -76,6 +100,8 @@ export const InviteModal = () => {
             </div>
 
             <Button 
+                onClick={onNew}
+                disabled={isLoading}
                 variant="link" 
                 size="sm"
                 className="text-xs text-zinc-500 mt-4"    

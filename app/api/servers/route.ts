@@ -4,7 +4,7 @@ import {currentProfile} from "@/lib/current-profile";
 
 import { db } from "@/lib/db";
 import { MemberRole } from "@prisma/client";
-
+//may have error in this file as server.profileId is not same as profile.id ( fix it )
 export async function POST(req: Request) {
     try {
         const {name,imageUrl} = await req.json();
