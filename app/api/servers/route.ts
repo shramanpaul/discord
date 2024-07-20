@@ -14,7 +14,7 @@ export async function POST(req: Request) {
         }
         const server = await db.server.create({
             data:{
-                profileId:uuidv4(),
+                profileId:profile.id, //now server.profileId is same as profile.id
                 name,
                 imageUrl,
                 inviteCode:uuidv4(),

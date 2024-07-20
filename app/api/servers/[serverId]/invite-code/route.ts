@@ -36,7 +36,7 @@ export async function PATCH(req: Request, { params }: { params: { serverId: stri
         const server = await db.server.update({     //server table accessed
             where: {
                 id: params.serverId,
-                // profileId: profile.id,   //error point my profileId inside server table is not same as profile.id (fix it)
+                profileId: profile.id,   //error point my profileId inside server table is not same as profile.id (fix it)
             },
             data: {
                 inviteCode: inviteCode,

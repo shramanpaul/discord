@@ -42,6 +42,7 @@ export const InviteModal = () => {
   }
 
  const onNew = async () => {
+  console.log("Server before update:", server); //debug
     if (!server || !server.id) {
         console.error("Server ID is undefined");
         return;
@@ -55,9 +56,9 @@ export const InviteModal = () => {
       onOpen("invite", { server: response.data });
   } catch (error) {
       console.error("Error sending PATCH request:", error);
-      // Handle the error appropriately
   } finally {
       setIsLoading(false);
+      console.log("Server updated:", server);
   }
 };
 // const onNew=async()=>{
