@@ -30,6 +30,7 @@ export const DeleteChannelModal = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+
   const onClick = async () => {
     try{
         setIsLoading(true);
@@ -50,6 +51,8 @@ export const DeleteChannelModal = () => {
         setIsLoading(false);
 
     }
+
+    window.location.reload();
 }
   
   return (
