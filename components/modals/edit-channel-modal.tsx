@@ -1,6 +1,7 @@
 "use client";
 import  qs  from "query-string";
-import { useParams, useRouter } from "next/navigation";
+import {useRouter } from "next/navigation";
+// import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,7 +48,7 @@ const formSchema = z.object({
 export const EditChannelModal = () => {
   const { isOpen, onClose, type,data } = useModal();
   const router = useRouter();
-  const params = useParams();
+  // const params = useParams();
 
   const isModalOpen = isOpen && type === "editChannel";
   const {channel, server} = data;
@@ -72,7 +73,7 @@ export const EditChannelModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url =qs.stringifyUrl({
-        url:"/api/channels/${channel?.id}",
+        url:`/api/channels/${channel?.id}`,
         query:{
           serverId: server?.id
         }
@@ -81,10 +82,12 @@ export const EditChannelModal = () => {
 
       form.reset();
       router.refresh();
-      onClose(); // Close modal after successful submission
+      onClose();
     } catch (error) {
       console.log(error);
     }
+
+    // window.location.reload();
   };
 
   const handleClose = () => {
