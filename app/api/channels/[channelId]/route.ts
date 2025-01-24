@@ -31,8 +31,8 @@ export async function DELETE(
                         role:{
                             in:[MemberRole.ADMIN, MemberRole.MODERATOR],
                         }
-                    },
-                },
+                    }
+                }
                 },
                 data:{
                     channels:{
@@ -41,10 +41,10 @@ export async function DELETE(
                             name:{
                                 not:"general",
                             }
-                        },
-                    },
+                        }
+                    }
                 }
-            })
+            });
             return NextResponse.json(server);
     }catch(error){
         console.error("[CHANNEL_ID_DELETE]",error);
@@ -87,8 +87,8 @@ export async function PATCH(
                         role:{
                             in:[MemberRole.ADMIN, MemberRole.MODERATOR],
                         }
-                    },
-                },
+                    }
+                }
                 },
                 data:{
                     channels:{
