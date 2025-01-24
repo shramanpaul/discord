@@ -50,8 +50,8 @@ export const InviteModal = () => {
 
     try {
       setIsLoading(true);
-      console.log(`Sending PATCH request to /api/servers/${server.id}/invite-code`);
-      const response = await axios.patch(`/api/servers/${server.id}/invite-code`);
+      console.log(`Sending PATCH request to /api/servers/${server?.id}/invite-code`);
+      const response = await axios.patch(`/api/servers/${server?.id}/invite-code`);
       console.log("Server update response:", response.data);
       onOpen("invite", { server: response.data });
   } catch (error) {
