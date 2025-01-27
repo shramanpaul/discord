@@ -14,7 +14,7 @@ export function ChatVideoButton() {
 
   const isVideo = searchParams?.get("video");
 
-  const Icon = isVideo ? VideoOff : Video;
+  const Icon = isVideo ? VideoOff : Video; //11:36
   const tooltipLabel = isVideo ? "End video call" : "Start video call";
 
   const onClick = () => {

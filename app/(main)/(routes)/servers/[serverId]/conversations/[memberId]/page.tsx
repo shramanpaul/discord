@@ -60,7 +60,7 @@ export default async function MemberIdPage({
         serverId={serverId}
         type="conversation"
       />
-      {/* {video && <MediaRoom chatId={conversation.id} video audio />} */}
+      {video && <MediaRoom chatId={conversation.id} video audio />}
       {!video && (
         <>
           <ChatMessages
