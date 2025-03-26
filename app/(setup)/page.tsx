@@ -6,10 +6,9 @@ import { InitialModal } from "@/components/modals/initial-modal";
 const SetupPage = async () => {
     const profile = await initialProfile();
 
-    // Type check to ensure `profile` has `id`
-    if (!profile || typeof profile !== 'object' || !('id' in profile)) {
-        // Handle the case where `initialProfile` returns something unexpected
-        return <InitialModal />;
+    // If `profile` is null, redirect to sign-in
+    if (!profile) {
+        return redirect("/sign-in");
     }
 
     const server = await db.server.findFirst({
@@ -28,5 +27,6 @@ const SetupPage = async () => {
 
     return <InitialModal />;
 };
+
 
 export default SetupPage;
