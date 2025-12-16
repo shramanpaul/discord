@@ -28,6 +28,11 @@ export const useChatQuery = ({
     }, { skipNull: true }); 
 
     const res = await fetch(url);
+    if (!res.ok) {
+      const body = await res.text();
+      console.error("fetchMessages error", res.status, body);
+      throw new Error(body || `Request failed with status ${res.status}`);
+    }
     return res.json();
   };
 

@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: example_root_password
+      MYSQL_DATABASE: discord
+      MYSQL_USER: discord_user
+      MYSQL_PASSWORD: discord_pass
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        CLERK_FRONTEND_API: ${CLERK_FRONTEND_API}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+        NEXT_PUBLIC_LIVEKIT_URL: ${NEXT_PUBLIC_LIVEKIT_URL}
+    env_file: 
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    command: ["./docker-entrypoint.sh", "npm", "start"]
+
+volumes:
+  db-data:

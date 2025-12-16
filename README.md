@@ -28,3 +28,29 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## Docker
+
+Quick instructions to build and run the app with MySQL using Docker Compose:
+
+1. Build and start services:
+
+```bash
+docker-compose up --build
+```
+
+2. The app will be available at http://localhost:3000. The Compose file creates a MySQL database with the following defaults:
+
+- user: `discord_user`
+- password: `discord_pass`
+- database: `discord`
+
+If you change credentials, update `DATABASE_URL` in `docker-compose.yml` or pass a custom env file.
+
+Notes:
+- The container runs `npx prisma migrate deploy` on startup (with retries) to apply migrations.
+- If you want to run only the app image build:
+
+```bash
+docker build -t discord-app .
+```

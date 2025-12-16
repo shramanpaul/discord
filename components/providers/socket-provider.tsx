@@ -31,25 +31,32 @@ export function SocketProvider({
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketInstance = new (ClientIO as any)(
-      process.env.NEXT_PUBLIC_SITE_URL!,
-      {
+    // Ensure the server-side Socket.IO is initialized before attempting websocket upgrade
+    (async () => {
+      try {
+        await fetch('/api/socket/init');
+      } catch (e) {
+        // ignore — we'll still attempt to connect
+      }
+
+      // Connect relative to the current origin to avoid cross-origin/ws upgrades
+      const socketInstance = new (ClientIO as any)(undefined, {
         path: "/api/socket/io",
         addTrailingSlash: false
-      }
-    );
+      });
 
-    socketInstance.on("connect", () => {
-      setIsConnected(true);
-    });
+      socketInstance.on("connect", () => {
+        setIsConnected(true);
+      });
 
-    socketInstance.on("disconnect", () => {
-      setIsConnected(false);
-    });
+      socketInstance.on("disconnect", () => {
+        setIsConnected(false);
+      });
 
-    setSocket(socketInstance);
+      setSocket(socketInstance);
 
-    return () => socketInstance.disconnect();
+      return () => socketInstance.disconnect();
+    })();
   }, []);
 
   return (

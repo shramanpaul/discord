@@ -64,6 +64,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ items: messages, nextCursor });
   } catch (error) {
     console.error("[MESSAGES_GET]", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 }
